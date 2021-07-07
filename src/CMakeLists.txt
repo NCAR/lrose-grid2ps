@@ -7,6 +7,10 @@ project(grid2ps)
 enable_language(C)
 enable_language(Fortran)
 
+# compile
+
+set(CMAKE_Fortran_FLAGS "${CMAKE_Fortran_FLAGS} -fPIC -std=legacy ")
+
 # includes
 
 include_directories(/usr//include)
