@@ -109,14 +109,6 @@ def main():
 
     os.chdir(baseDir)
 
-    # run autoconf
-
-    #shellCmd("./runAutoConf.py")
-
-    # update the datestamp header file
-
-    updateDateStampHeader(now.tm_year, now.tm_mon, now.tm_mday);
-    
     # create the release information file
     
     createReleaseInfoFile()
@@ -251,16 +243,6 @@ def createTarFile():
     shellCmd("tar cvfzh " + tarName + " " + releaseName)
     
 ########################################################################
-# update the date stamp header file
-
-def updateDateStampHeader(year, month, day):
-
-    versionStr = '{:04d}'.format(year) + '/' + '{:02d}'.format(month) + '/' + '{:02d}'.format(day)
-    header = open('./include/date_stamp.h', 'w')
-    header.write('static const char *sii_date_stamp = \"Version ' + versionStr + '\";\n')
-    header.close()
-
-########################################################################
 # create the brew formula for OSX builds
 
 def createBrewFormula():
@@ -272,23 +254,10 @@ def createBrewFormula():
     tarUrl = "https://github.com/NCAR/lrose-grid2ps/releases/download/" + \
              package + "-" + versionStr + "/" + tarName
     formulaName = package + ".rb"
-    scriptName = "build_grid2ps_formula"
-    scriptPath = os.path.join(baseDir, scriptName)
-
-    # check if script exists
-
-    if (os.path.isfile(scriptPath) == False):
-        print("WARNING - ", thisScriptName, file=sys.stderr)
-        print("  No script: ", scriptPath, file=sys.stderr)
-        print("  Will not build brew formula for package", file=sys.stderr)
-        return
 
     # create the brew formula file
 
     build_grid2ps_formula(tarName, tarUrl, formulaName)
-
-#    shellCmd(scriptPath + " " + tarUrl + " " +
-#             tarName + " " + formulaName)
 
     # move it up into the release dir
 
