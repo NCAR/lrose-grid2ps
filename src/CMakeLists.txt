@@ -16,6 +16,11 @@ set(CMAKE_Fortran_FLAGS "${CMAKE_Fortran_FLAGS} -fPIC -std=legacy ")
 include_directories(/usr//include)
 include_directories(/usr/local/include)
 
+# libs
+
+link_directories(/usr/lib)
+link_directories(/usr/local/lib)
+
 # Finding pkg-config
 find_package(PkgConfig REQUIRED)
 
@@ -71,9 +76,6 @@ add_executable (
   )
 
 # link
-
-link_directories(/usr/lib)
-link_directories(/usr/local/lib)
 
 target_link_libraries(${PROJECT_NAME} ${NETCDF_LIBRARIES})
 target_link_libraries(${PROJECT_NAME} netcdff)
