@@ -391,6 +391,12 @@ C Get command line arguments
 
 	IF (nargs.GT.0) THEN
 
+	   Call getarg(1, arg)
+	   IF (index(arg, '-h') > 0) then
+   	      print*, 'Usage: grid2ps template-num file-path'
+   	      stop
+	   ENDIF
+
            DO i = 1, nargs
               Call getarg(i, arg)
               IF (i.EQ.1) THEN

@@ -284,7 +284,7 @@ class LroseGrid2ps < Formula
   depends_on 'pkg-config'
 
   def install
-    system "./configure", "--disable-dependency-tracking", "--prefix=#{{prefix}}"
+    system "cmake", "-DCMAKE_INSTALL_PREFIX=#{{prefix}}", "."
     system "make install"
   end
 
