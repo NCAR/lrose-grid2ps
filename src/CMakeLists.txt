@@ -2,37 +2,20 @@
 
 project(grid2ps)
 
-# compile definitions
-
-#add_definitions(-std=c++11)
-
-# If needed, generate TDRP Params.cc and Params.hh files
-# from their associated paramdef.<app> file
-
-#makeTdrpParams()
-
-# includes
-
-#include_directories(${LROSE_PREFIX}/include)
-#include_directories(${EIGEN3_INCLUDE_DIR})
-#include_directories(/usr/local/include)
-
-# Link
-
-#link_directories(${LROSE_PREFIX}/lib)
-#link_directories(/usr/lib/x86_64-linux-gnu/hdf5/serial)
-#link_directories(/usr/local/lib)
-
-# location of bin as it is built
-
-# set(EXECUTABLE_OUTPUT_PATH ${CMAKE_BINARY_DIR}/release/bin)
+# languages
 
 enable_language(C)
 enable_language(Fortran)
 
+# includes
+
+include_directories(/usr//include)
+include_directories(/usr/local/include)
+
 # Finding pkg-config
 find_package(PkgConfig REQUIRED)
 
+# find NetCDF
 find_package (NETCDF)
 
 # build app
@@ -85,16 +68,10 @@ add_executable (
 
 # link
 
-#target_link_libraries(${PROJECT_NAME} ${LROSE_LIBRARIES})
-#target_link_libraries(${PROJECT_NAME} bz2)
+target_link_libraries(${PROJECT_NAME} ${NETCDF_LIBRARIES})
+target_link_libraries(${PROJECT_NAME} netcdff)
 
 # install
-
-#set(INSTALL_PREFIX $ENV{LROSE_INSTALL_DIR})
-
-#if(NOT INSTALL_PREFIX)
-#  set(INSTALL_PREFIX ${LROSE_PREFIX})
-#endif(NOT INSTALL_PREFIX)
 
 install(TARGETS ${PROJECT_NAME} DESTINATION ${CMAKE_INSTALL_PREFIX}/bin)
 

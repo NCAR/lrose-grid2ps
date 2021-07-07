@@ -6,6 +6,7 @@ cmake_minimum_required(VERSION 2.8)
 
 project(grid2ps)
 set(CMAKE_BUILD_TYPE Release)
+set(CMAKE_VERBOSE_MAKEFILE ON)
 
 # Where to find *Find*.cmake and *-config.cmake
 
@@ -14,7 +15,6 @@ set(CMAKE_PREFIX_PATH ${CMAKE_MODULE_PATH})
 
 # find the packages
 
-#find_package(LROSE REQUIRED)
 find_package(NetCDF REQUIRED)
 
 # enable testing for this dir and below
