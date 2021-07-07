@@ -1,6 +1,9 @@
 /* workstation version */
 
 #include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+#include <memory.h>
 #include "cedric.h" 
 
 FILE *fp1;   /* pointer to output file */
