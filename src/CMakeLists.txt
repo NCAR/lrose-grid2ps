@@ -13,7 +13,7 @@ set(CMAKE_Fortran_FLAGS "${CMAKE_Fortran_FLAGS} -fPIC -std=legacy ")
 
 # includes
 
-include_directories(/usr//include)
+include_directories(/usr/include)
 include_directories(/usr/local/include)
 
 # libs
