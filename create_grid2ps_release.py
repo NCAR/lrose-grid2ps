@@ -242,6 +242,64 @@ def createTarFile():
 
     shellCmd("tar cvfzh " + tarName + " " + releaseName)
     
+#################################################
+# Template for homebrew formula file
+# Documentation: https://github.com/mxcl/homebrew/wiki/Formula-Cookbook
+
+formulaBody = """
+
+require 'formula'
+
+class LroseGrid2ps < Formula
+
+  homepage 'https://github.com/NCAR/lrose-grid2ps'
+
+  url '{0}'
+  version '{1}'
+  sha256 '{2}'
+
+  depends_on 'cmake'
+  depends_on 'hdf5'
+  depends_on 'netcdf'
+  depends_on 'pkg-config'
+
+  def install
+
+    # Build/install grid2ps
+    ENV['LROSE_INSTALL_DIR'] = prefix
+    system "cmake", "-DCMAKE_INSTALL_PREFIX=#{{prefix}}", "."
+    system "make install"
+
+  end
+
+  def test
+    # Run the test with `brew test grid2ps`.
+     system "#{{bin}}/grid2ps", "-h"
+  end
+end
+"""
+
+####################################################################
+# build a Homebrew forumula file for grid2ps
+#
+
+def buildGrid2psFormula(tar_url, tar_name, formula_name):
+
+    print("=======>> tar_name: ", tar_name, file=sys.stderr)
+    print("=======>> tar_url: ", tar_url, file=sys.stderr)
+    print("=======>> formula_name: ", formula_name, file=sys.stderr)
+
+    """ build a Homebrew forumula file for lrose-grid2ps """	
+    dash = tar_name.find('-')
+    period = tar_name.find('.', dash)
+    version = tar_name[dash+1:period]
+    result = subprocess.check_output(("sha256sum", tar_name))
+    checksum = result.split()[0].decode('ascii')
+    formula = formulaBody.format(tar_url, version, checksum)
+    outf = open(formula_name, 'w')
+    outf.write(formula)
+    outf.close()
+
 ########################################################################
 # create the brew formula for OSX builds
 
@@ -257,74 +315,12 @@ def createBrewFormula():
 
     # create the brew formula file
 
-    build_grid2ps_formula(tarName, tarUrl, formulaName)
+    buildGrid2psFormula(tarUrl, tarName, formulaName)
 
     # move it up into the release dir
 
     os.rename(os.path.join(baseDir, formulaName),
               os.path.join(options.releaseDir, formulaName))
-
-#################################################
-# Template for homebrew formula file
-
-template = """
-
-require 'formula'
-
-# Documentation: https://github.com/mxcl/homebrew/wiki/Formula-Cookbook
-
-class LroseGrid2ps < Formula
-  homepage 'https://github.com/NCAR/lrose-grid2ps'
-  url '{0}'
-  version '{1}'
-  sha256 '{2}'
-
-  depends_on 'hdf5'
-  depends_on 'netcdf'
-  depends_on 'pkg-config'
-
-  def install
-    system "cmake", "-DCMAKE_INSTALL_PREFIX=#{{prefix}}", "."
-    system "make install"
-  end
-
-  def test
-    # Run the test with `brew test grid2ps`.
-     system "#{{bin}}/grid2ps", "-h"
-  end
-end
-"""
-
-####################################################################
-# build a Homebrew forumula file for grid2ps
-#
-
-def build_grid2ps_formula(tar_path, release_url, rb_file):
-
-    # compute a sha256 digest for this file
-    BUFSIZE=4096
-    sha256 = hashlib.sha256()
-    f = open(tar_path)
-    while True:
-        bytes = f.read(BUFSIZE)
-        l = len(bytes)
-        if l == 0:
-            break
-        sha256.update(bytes)
-    f.close()
-    checksum = sha256.hexdigest()
-
-    # find the name of the tar file
-    tar_file = os.path.basename(tar_path)
-    
-    dash = tar_file.find('-')
-    period = tar_file.find('.', dash)
-    version = tar_file[dash+1:period]
-    print('checksum = ', checksum, file=sys.stderr)
-    formula = template.format(release_url, version, checksum)
-    outf = open(rb_file, 'w')
-    print(formula, file=outf)
-    outf.close()
 
 ########################################################################
 # Run a command in a shell, wait for it to complete
